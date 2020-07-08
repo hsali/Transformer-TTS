@@ -5,6 +5,7 @@ from scipy import signal
 import hyperparams as hp
 import torch as t
 
+
 def get_spectrograms(fpath):
     '''Parse the wave file in `fpath` and
     Returns normalized melspectrogram and linear spectrogram.
@@ -50,6 +51,7 @@ def get_spectrograms(fpath):
 
     return mel, mag
 
+
 def spectrogram2wav(mag):
     '''# Generate wave file from linear magnitude spectrogram
     Args:
@@ -77,6 +79,7 @@ def spectrogram2wav(mag):
 
     return wav.astype(np.float32)
 
+
 def griffin_lim(spectrogram):
     '''Applies Griffin-Lim's raw.'''
     X_best = copy.deepcopy(spectrogram)
@@ -97,6 +100,7 @@ def invert_spectrogram(spectrogram):
     '''
     return librosa.istft(spectrogram, hp.hop_length, win_length=hp.win_length, window="hann")
 
+
 def get_positional_table(d_pos_vec, n_position=1024):
     position_enc = np.array([
         [pos / np.power(10000, 2*i/d_pos_vec) for i in range(d_pos_vec)]
@@ -105,6 +109,7 @@ def get_positional_table(d_pos_vec, n_position=1024):
     position_enc[1:, 0::2] = np.sin(position_enc[1:, 0::2]) # dim 2i
     position_enc[1:, 1::2] = np.cos(position_enc[1:, 1::2]) # dim 2i+1
     return t.from_numpy(position_enc).type(t.FloatTensor)
+
 
 def get_sinusoid_encoding_table(n_position, d_hid, padding_idx=None):
     ''' Sinusoid position encoding table '''
@@ -125,6 +130,7 @@ def get_sinusoid_encoding_table(n_position, d_hid, padding_idx=None):
         sinusoid_table[padding_idx] = 0.
 
     return t.FloatTensor(sinusoid_table)
+
 
 def guided_attention(N, T, g=0.2):
     '''Guided attention. Refer to page 3 on the paper.'''
